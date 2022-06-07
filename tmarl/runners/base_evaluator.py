@@ -46,12 +46,12 @@ class Evaluator(Runner):
         # cuda
         if not all_args.disable_cuda and torch.cuda.is_available():
             device = torch.device("cuda:0")
-
+            print("Choose to use GPU!")
             if all_args.cuda_deterministic:
                 torch.backends.cudnn.benchmark = False
                 torch.backends.cudnn.deterministic = True
         else:
-            print("choose to use cpu...")
+            print("Choose to use cpu...")
             device = torch.device("cpu")
 
 

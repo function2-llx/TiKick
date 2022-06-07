@@ -83,7 +83,8 @@ class PolicyNetwork(nn.Module):
         # if output_logit:
         #     action_logits = self.linear(actor_features)
         #     return action_logits, rnn_states
- 
+        # print("Features:", actor_features.shape)
+        actor_features = actor_features[:,-1,:].squeeze()
         actions, action_log_probs, action_logits = self.act(actor_features, available_actions, deterministic)
         return actions, action_log_probs, action_logits, rnn_states
 

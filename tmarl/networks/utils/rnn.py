@@ -9,7 +9,7 @@ class RNNLayer(nn.Module):
         self._recurrent_N = recurrent_N
         self._use_orthogonal = use_orthogonal
 
-        self.rnn = nn.GRU(inputs_dim, outputs_dim, num_layers=self._recurrent_N)
+        self.rnn = nn.GRU(inputs_dim, outputs_dim, num_layers=self._recurrent_N, batch_first=True)
         for name, param in self.rnn.named_parameters():
             if 'bias' in name:
                 nn.init.constant_(param, 0)
@@ -21,8 +21,9 @@ class RNNLayer(nn.Module):
         self.norm = nn.LayerNorm(outputs_dim)
 
     def forward(self, x, hxs, masks):
+        # print(x.shape, hxs.shape, masks.shape)
         if x.size(0) == hxs.size(0):
-            x, hxs = self.rnn(x.unsqueeze(0), (hxs * masks.repeat(1, self._recurrent_N).unsqueeze(-1)).transpose(0, 1).contiguous())
+            x, hxs = self.rnn(x, (hxs * masks.repeat(1, self._recurrent_N).unsqueeze(-1)).transpose(0, 1).contiguous())
 
             x = x.squeeze(0)
             hxs = hxs.transpose(0, 1)
