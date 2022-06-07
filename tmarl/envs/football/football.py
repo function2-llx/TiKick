@@ -1,3 +1,4 @@
+from typing import Optional
 import numpy as np
 
 import gym
@@ -8,14 +9,15 @@ import tmarl.envs.football.env as football_env
 class RllibGFootball(MultiAgentEnv):
     """An example of a wrapper for GFootball to make it compatible with rllib."""
 
-    def __init__(self, all_args, rank, log_dir=None, isEval=False):
+    def __init__(self, all_args, rank, log_dir=None, isEval=False, need_render: Optional[bool] = None):
         
         self.num_agents = all_args.num_agents
         self.num_rollout = all_args.n_rollout_threads
         self.isEval = isEval
         self.rank = rank
         # create env
-        need_render = (rank == 0) and isEval
+        if need_render is None:
+            need_render = (rank == 0) and isEval
         #    and (not isEval or self.use_behavior_cloning)
         self.env = football_env.create_environment(
             env_name=all_args.scenario_name, stacked=False,

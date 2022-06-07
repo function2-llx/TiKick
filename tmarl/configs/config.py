@@ -39,7 +39,7 @@ def get_config():
 
     parser.add_argument("--n_rollout_threads", type=int, default=2,
                         help="Number of parallel envs for training rollout")
-    parser.add_argument("--n_eval_rollout_threads", type=int, default=1,
+    parser.add_argument("--n_eval_rollout_threads", type=int, default=32,
                         help="Number of parallel envs for evaluating rollout")
     parser.add_argument("--n_render_rollout_threads", type=int, default=1,
                         help="Number of parallel envs for rendering rollout")
