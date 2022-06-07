@@ -23,6 +23,8 @@ class RNNLayer(nn.Module):
     def forward(self, x, hxs, masks):
         # print(x.shape, hxs.shape, masks.shape)
         if x.size(0) == hxs.size(0):
+            if len(x.shape) < len(hxs.shape):
+                x = x.unsqueeze(1)
             x, hxs = self.rnn(x, (hxs * masks.repeat(1, self._recurrent_N).unsqueeze(-1)).transpose(0, 1).contiguous())
 
             x = x.squeeze(0)

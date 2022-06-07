@@ -14,11 +14,14 @@ class FootballDriver(Driver):
         self.trainer.prep_rollout()
         episodes = int(self.num_env_steps)
         total_num_steps = 0
+        win_rates = []
         for episode in range(episodes):
             print('Episode {}:'.format(episode))
 
-            self.eval(total_num_steps)
-                
+            episode_win_rate = self.eval(total_num_steps)
+            win_rates.append(episode_win_rate)
+        print("{} Episodes Success Rate:".format(episodes), np.array(win_rates).mean())
+        print("{} Episodes Success Rate Std:".format(episodes), np.array(win_rates).std())
     def eval(self, total_num_steps):
         
         eval_episode_rewards = []
@@ -95,3 +98,4 @@ class FootballDriver(Driver):
         eval_env_infos['eval_average_enemy_score'] = enemy_goal
         eval_env_infos['eval_average_net_score'] = net_goal
         print("\tSuccess Rate: " + str(np.mean(winning_rate>0)) )
+        return np.mean(winning_rate>0)
