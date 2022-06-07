@@ -109,7 +109,7 @@ class ImitationTrainer(Evaluator):
             replay_action = deque(maxlen=period_len)
             for eval_step in range(3001):
                 self.teacher.eval()
-                eval_action, eval_action_log_prob, eval_rnn_states = \
+                eval_action, eval_action_log_prob, eval_action_logits, eval_rnn_states = \
                 self.teacher(np.concatenate(eval_obs),
                                 np.concatenate(eval_rnn_states),
                                 np.concatenate(eval_masks),
@@ -196,7 +196,7 @@ class ImitationTrainer(Evaluator):
                         #   self.config['eval_envs'].share_observation_space[0],
                           self.eval_envs.action_space[0],
                           device=self.device,
-                          output_logit=True
+                        #   output_logit=True
                           )
         print("Generating Replay Buffer...")
         # print(self.all_args.epochs)
@@ -230,12 +230,11 @@ class ImitationTrainer(Evaluator):
                 rnn_shape = [self.all_args.n_eval_rollout_threads,agent_num,self.all_args.recurrent_N,self.all_args.hidden_size]
                 rnn_states = np.zeros(rnn_shape, dtype=np.float32)
                 masks = np.ones((self.all_args.n_eval_rollout_threads, agent_num, 1), dtype=np.float32)
-                action_logits, rnn_states = self.student(np.concatenate(obs),
+                actions, action_log_probs, action_logits, rnn_states = self.student(np.concatenate(obs),
                                 np.concatenate(rnn_states),
                                 np.concatenate(masks),
                                 np.concatenate(eval_available_actions),
                                 deterministic=True,
-                                output_logit=True
                                 )
                 # print(label.shape)
                 label = torch.tensor(label.reshape(-1, action_logits.shape[1])).to(self.device)

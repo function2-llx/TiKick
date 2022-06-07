@@ -15,6 +15,6 @@ algo="rmappo"
 
 CUDA_VISIBLE_DEVICES=0 python ../../tmarl/runners/football/imitation_trainer.py --env_name ${env} \
 --algorithm_name ${algo} --scenario_name ${scenario} --num_agents ${num_agents} \
---n_eval_rollout_threads 32 --eval_num 1 --epochs 100 --use_eval \
+--n_eval_rollout_threads 32 --eval_num 30 --epochs 20 --use_eval \
 --replay_save_dir "../../results/academy_3_vs_1_with_keeper/replay/" \
 --model_dir "../../models/academy_3_vs_1_with_keeper"

@@ -35,7 +35,7 @@ class FootballDriver(Driver):
         
         for eval_step in range(3001):
             self.trainer.prep_rollout()
-            _, eval_action, eval_action_log_prob, eval_rnn_states, _ = \
+            _, eval_action, eval_action_log_prob, eval_action_logits, eval_rnn_states, _ = \
                 self.trainer.algo_module.get_actions(np.concatenate(eval_share_obs),
                                                      np.concatenate(eval_obs),
                                                      np.concatenate(eval_rnn_states),

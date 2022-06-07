@@ -12,7 +12,7 @@ from tmarl.utils.util import get_shape_from_obs_space
 # networks are defined here
 
 class PolicyNetwork(nn.Module):
-    def __init__(self, args, obs_space, action_space, device=torch.device("cpu"),output_logit=False):
+    def __init__(self, args, obs_space, action_space, device=torch.device("cpu")):
         super(PolicyNetwork, self).__init__()
         self.hidden_size = args.hidden_size
 
@@ -57,8 +57,8 @@ class PolicyNetwork(nn.Module):
         init_method = [nn.init.xavier_uniform_, nn.init.orthogonal_][self._use_orthogonal]
         def init_(m): 
             return init(m, init_method, lambda x: nn.init.constant_(x, 0), self._gain)
-        if output_logit:
-            self.linear = init_(nn.Linear(input_size, action_space.n))
+        # if output_logit:
+        #     self.linear = init_(nn.Linear(input_size, action_space.n))
 
         self.to(device)
 
@@ -80,12 +80,12 @@ class PolicyNetwork(nn.Module):
             mlp_obs = self.mlp(obs)
             actor_features = torch.cat([actor_features, mlp_obs], dim=1)
 
-        if output_logit:
-            action_logits = self.linear(actor_features)
-            return action_logits, rnn_states
+        # if output_logit:
+        #     action_logits = self.linear(actor_features)
+        #     return action_logits, rnn_states
  
-        actions, action_log_probs = self.act(actor_features, available_actions, deterministic)
-        return actions, action_log_probs, rnn_states
+        actions, action_log_probs, action_logits = self.act(actor_features, available_actions, deterministic)
+        return actions, action_log_probs, action_logits, rnn_states
 
     def evaluate_actions(self, obs, rnn_states, action, masks, available_actions=None, active_masks=None):
         if self._mixed_obs:
