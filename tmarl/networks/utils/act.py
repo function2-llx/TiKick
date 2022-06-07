@@ -72,8 +72,9 @@ class ACTLayer(nn.Module):
             actions = action_logits.mode() if deterministic else action_logits.sample() 
             action_log_probs = action_logits.log_probs(actions)
         
-        # out_logits = action_logits.logits
-        return actions, action_log_probs
+        out_logits = action_logits.logits
+        # print("Test:", actions.shape ,out_logits.shape)
+        return actions, action_log_probs, out_logits
 
     def get_probs(self, x, available_actions=None):
         if self.mixed_action or self.multidiscrete_action:
